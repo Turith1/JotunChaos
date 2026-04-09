@@ -818,7 +818,7 @@ GameObject:
   - component: {fileID: 869158721}
   - component: {fileID: 869158720}
   m_Layer: 0
-  m_Name: NeyworkManager
+  m_Name: NetworkManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
