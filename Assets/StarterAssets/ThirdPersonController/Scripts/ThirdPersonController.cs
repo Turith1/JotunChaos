@@ -394,5 +394,10 @@ namespace StarterAssets
 
             }
         }
+
+        public override void OnNetworkSpawn()
+        {
+            Debug.Log("IsOwner: "+ IsOwner + ", OwnerId: " + OwnerClientId + ", LocalId:" + NetworkManager.Singleton.LocalClientId);
+        }
     }
 }

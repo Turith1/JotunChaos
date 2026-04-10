@@ -28,12 +28,12 @@ public class ClientPlayerMove : NetworkBehaviour
             m_StarterAssetsInputs.enabled = true;
             m_PlayerInput.enabled = true;
             m_cineCam.SetActive(true);
-        }
-        if(IsServer)
             m_ThirdPersonController.enabled = true;
+        }
+        //if(IsServer)
     }
 
-    [Rpc(SendTo.Server)]
+    /*[Rpc(SendTo.Server)]
     private void UpdateInputServerRpc(Vector2 move, Vector2 look, bool jump, bool sprint)
     {
         m_StarterAssetsInputs.MoveInput(move);
@@ -44,9 +44,7 @@ public class ClientPlayerMove : NetworkBehaviour
 
     private void LateUpdate()
     {
-        /*if (!IsOwner)
-            return;*/
 
         UpdateInputServerRpc(m_StarterAssetsInputs.move, m_StarterAssetsInputs.look, m_StarterAssetsInputs.jump, m_StarterAssetsInputs.sprint);
-    }
+    }*/
 }
