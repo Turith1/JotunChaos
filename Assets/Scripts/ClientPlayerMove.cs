@@ -2,6 +2,7 @@ using UnityEngine;
 using Unity.Netcode;
 using UnityEngine.InputSystem;
 using StarterAssets;
+using Unity.Cinemachine;
 
 public class ClientPlayerMove : NetworkBehaviour
 {
@@ -9,14 +10,14 @@ public class ClientPlayerMove : NetworkBehaviour
     [SerializeField] private StarterAssetsInputs m_StarterAssetsInputs;
     [SerializeField] private ThirdPersonController m_ThirdPersonController;
     [SerializeField] private GameObject m_cineCam;
+    [SerializeField] private GameObject _mainCamera;
 
     private void Awake()
     {
-        m_StarterAssetsInputs.enabled = false;
-        m_PlayerInput.enabled = false;
-        m_ThirdPersonController.enabled = false;
-        m_cineCam.SetActive(false);
-        //GameObject Camera = GameObject.FindGameObjectWithTag("CameraPlayer");
+        if (_mainCamera == null)
+        {
+            _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
+        }
     }
 
     public override void OnNetworkSpawn()
@@ -25,26 +26,29 @@ public class ClientPlayerMove : NetworkBehaviour
 
         if (IsOwner)
         {
-            m_StarterAssetsInputs.enabled = true;
             m_PlayerInput.enabled = true;
+            m_StarterAssetsInputs.enabled = true;
             m_cineCam.SetActive(true);
             m_ThirdPersonController.enabled = true;
         }
-        //if(IsServer)
+        else if(!IsOwner && !IsServer)
+        {
+            m_PlayerInput.enabled = false;
+            m_StarterAssetsInputs.enabled = false;
+        }
     }
 
-    /*[Rpc(SendTo.Server)]
-    private void UpdateInputServerRpc(Vector2 move, Vector2 look, bool jump, bool sprint)
+    [ServerRpc]
+    public void UpdateInputServerRpc(Vector2 move, Vector2 look, bool jump, bool sprint, float camRotation)
     {
-        m_StarterAssetsInputs.MoveInput(move);
-        m_StarterAssetsInputs.LookInput(look);
-        m_StarterAssetsInputs.JumpInput(jump);
-        m_StarterAssetsInputs.SprintInput(sprint);
+        m_ThirdPersonController.SetServerInput(move, look, jump, sprint, camRotation);
     }
 
-    private void LateUpdate()
+    private void Update()
     {
+        if (!IsOwner)
+            return;
 
-        UpdateInputServerRpc(m_StarterAssetsInputs.move, m_StarterAssetsInputs.look, m_StarterAssetsInputs.jump, m_StarterAssetsInputs.sprint);
-    }*/
+        UpdateInputServerRpc(m_StarterAssetsInputs.move, m_StarterAssetsInputs.look, m_StarterAssetsInputs.jump, m_StarterAssetsInputs.sprint, _mainCamera.transform.eulerAngles.y);
+    }
 }

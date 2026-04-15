@@ -1850,7 +1850,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 3949323609
+  GlobalObjectIdHash: 2013030421
   InScenePlacedSourceGlobalObjectIdHash: 3949323609
   DeferredDespawnTick: 0
   Ownership: 1
@@ -1911,6 +1911,7 @@ MonoBehaviour:
   BottomClamp: -30
   CameraAngleOverride: 0
   LockCameraPosition: 0
+  _mainCamera: {fileID: 0}
 --- !u!114 &4686594921438854607
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2019,10 +2020,6 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 980e881e-182c-404c-8cbf-3d09fdb48fef
     m_ActionName: 'Player/Sprint[/Keyboard/leftShift,/XInputControllerWindows/leftTrigger]'
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: e4ce1614-c754-48c1-9103-33130441661f
-    m_ActionName: UI/New action
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -2045,6 +2042,7 @@ MonoBehaviour:
   m_StarterAssetsInputs: {fileID: 4686594921438854607}
   m_ThirdPersonController: {fileID: 5028122652923469336}
   m_cineCam: {fileID: 3441850996164906847}
+  _mainCamera: {fileID: 0}
 --- !u!114 &7617416660932727400
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2069,7 +2067,7 @@ MonoBehaviour:
   RotationMaxInterpolationTime: 0.1
   ScaleLerpSmoothing: 1
   ScaleMaxInterpolationTime: 0.1
-  AuthorityMode: 1
+  AuthorityMode: 0
   TickSyncChildren: 0
   UseUnreliableDeltas: 0
   SyncPositionX: 1
@@ -2105,7 +2103,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkAnimator
   ShowTopMostFoldoutHeaderGroup: 1
   NetworkAnimatorExpanded: 0
-  AuthorityMode: 1
+  AuthorityMode: 0
   m_Animator: {fileID: 1565365604898477006}
   TransitionStateInfoList: []
   AnimatorParameterEntries:
