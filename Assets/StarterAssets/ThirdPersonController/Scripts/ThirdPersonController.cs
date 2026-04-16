@@ -226,7 +226,6 @@ namespace StarterAssets
             // Cinemachine will follow this target
             CinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride,
                 _cinemachineTargetYaw, 0.0f);
-            Debug.Log("Cinemachine target: " + CinemachineCameraTarget.transform.rotation + ", client: " + OwnerClientId);
         }
 
         public void SetServerInput(Vector2 move, Vector2 look, bool jump, bool sprint, float camRot)
