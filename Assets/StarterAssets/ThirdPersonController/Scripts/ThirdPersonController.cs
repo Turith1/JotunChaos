@@ -179,7 +179,8 @@ namespace StarterAssets
 
         private void LateUpdate()
         {
-            CameraRotation();
+            if(IsOwner)
+                CameraRotation();
         }
 
         private void AssignAnimationIDs()
@@ -209,13 +210,13 @@ namespace StarterAssets
         private void CameraRotation()
         {
             // if there is an input and camera position is not fixed
-            if (_serverLook.sqrMagnitude >= _threshold && !LockCameraPosition)
+            if (_input.look.sqrMagnitude >= _threshold && !LockCameraPosition)
             {
                 //Don't multiply mouse input by Time.deltaTime;
                 float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
 
-                _cinemachineTargetYaw += _serverLook.x * deltaTimeMultiplier;
-                _cinemachineTargetPitch += _serverLook.y * deltaTimeMultiplier;
+                _cinemachineTargetYaw += _input.look.x * deltaTimeMultiplier;
+                _cinemachineTargetPitch += _input.look.y * deltaTimeMultiplier;
             }
 
             // clamp our rotations so our values are limited 360 degrees
@@ -225,6 +226,7 @@ namespace StarterAssets
             // Cinemachine will follow this target
             CinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride,
                 _cinemachineTargetYaw, 0.0f);
+            Debug.Log("Cinemachine target: " + CinemachineCameraTarget.transform.rotation + ", client: " + OwnerClientId);
         }
 
         public void SetServerInput(Vector2 move, Vector2 look, bool jump, bool sprint, float camRot)

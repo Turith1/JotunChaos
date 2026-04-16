@@ -14,6 +14,7 @@ public class ClientPlayerMove : NetworkBehaviour
 
     private void Awake()
     {
+        m_cineCam.SetActive(false);
         if (_mainCamera == null)
         {
             _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
@@ -26,9 +27,9 @@ public class ClientPlayerMove : NetworkBehaviour
 
         if (IsOwner)
         {
+            m_cineCam.SetActive(true);
             m_PlayerInput.enabled = true;
             m_StarterAssetsInputs.enabled = true;
-            m_cineCam.SetActive(true);
             m_ThirdPersonController.enabled = true;
         }
         else if(!IsOwner && !IsServer)
