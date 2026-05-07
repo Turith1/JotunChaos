@@ -17,9 +17,19 @@ public class LobbyManager : MonoBehaviour
 
     private Lobby _joinedLobby;
     private Lobby _hostLobby;
+    private QueryResponse response;
+    private int CurrentLobbyIndex;
+
+    [SerializeField]
+    private GameObject _scrollViewContent;
+    [SerializeField]
+    private List<LobbyInstance> _instantiatedRooms;
+    [SerializeField]
+    private GameObject _roomPrefab;
+
 
     [ContextMenu("Start Host")]
-    public async void StartHost(int modeIndex)
+    public async void StartHost()
     {
         await InitializeServices();
 
@@ -43,10 +53,6 @@ public class LobbyManager : MonoBehaviour
                 {
                     "joinCode",
                     new DataObject(DataObject.VisibilityOptions.Public, joinCode)
-                },
-                {
-                    "gameMode",
-                    new DataObject(DataObject.VisibilityOptions.Public, modeIndex.ToString())
                 }
                 }
             });
@@ -54,19 +60,7 @@ public class LobbyManager : MonoBehaviour
         Debug.Log("Lobby criado: " + _hostLobby.Id);
         Debug.Log("JoinCode: " + joinCode);
 
-        // UI / dados locais
-
-
-        //BattleDynamicsData.CurrentOnlineBattleMode = (SkirmishMode)modeIndex;
-        //BattleDynamicsData.MyHostJoinCode = joinCode;
-
-        // opcional mostrar código na tela
-        //_joinCodeOutput.text = joinCode;
-
         NetworkManager.Singleton.StartHost();
-
-        //var canvas = Instantiate(_networkCanvas);
-        //canvas.GetComponent<NetworkObject>().Spawn();
     }
 
     private async Task InitializeServices()
@@ -75,36 +69,72 @@ public class LobbyManager : MonoBehaviour
         await AuthenticationService.Instance.SignInAnonymouslyAsync();
     }
 
-    public void StartHost()
+    public async void JoinRoom()
     {
+        Lobby lobby = response.Results[CurrentLobbyIndex];
 
-    }
+        // 🔹 entra no lobby
+        _joinedLobby = await LobbyService.Instance.JoinLobbyByIdAsync(lobby.Id);
 
-    /*public async void CreateLobby()
-    {
-        // 1. Cria alocação no Relay para até 4 pessoas
-        var allocation = await RelayService.Instance.CreateAllocationAsync(4);
-        string joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
+        Debug.Log("Entrou no lobby: " + lobby.Id);
 
-        // 2. Configura o Netcode para usar o Relay
-        //NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(new RelayServerData(allocation, "dtls"));
+        // 🔹 pega dados
+        string joinCode = lobby.Data["joinCode"].Value;
+
+        // 🔹 RELAY
         JoinAllocation joinAllocation = await RelayService.Instance.JoinAllocationAsync(joinCode);
+
         RelayServerData relayData = AllocationUtils.ToRelayServerData(joinAllocation, "dtls");
+
         var transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
         transport.SetRelayServerData(relayData);
 
-        // 3. Cria o Lobby na Unity Cloud
-        var options = new CreateLobbyOptions
+        NetworkManager.Singleton.StartClient();
+    }
+
+    public async void UpdateShownLobbies()
+    {
+        Debug.Log("INSIDE UPDATE SHOWN LOBBIES");
+
+        if (_instantiatedRooms != null)
         {
-            IsPrivate = false,
-            Data = new Dictionary<string, LobbyDataObject> {
-            { "JoinCode", new LobbyDataObject(LobbyDataObject.VisibilityOptions.Member, joinCode) }
+            var wipeList = new List<LobbyInstance>();
+
+            foreach (var item in _instantiatedRooms)
+            {
+                wipeList.Add(item);
+            }
+            foreach (var item in wipeList)
+            {
+                Destroy(item.gameObject);
+            }
         }
-        };
+        _instantiatedRooms = new();
 
-        var lobby = await LobbyService.Instance.CreateLobbyAsync("NomeDoLobby", 4, options);
+        await InitializeServices();
 
-        // 4. Inicia como Host no Netcode
-        NetworkManager.Singleton.StartHost();
-    }*/
+        // 🔹 Busca lobbies disponíveis
+        response = await LobbyService.Instance.QueryLobbiesAsync();
+
+        if (response.Results.Count == 0)
+        {
+            Debug.Log("Nenhum lobby encontrado");
+            return;
+        }
+
+        //_availableLobbies.options = new();
+
+        for (int i = 0; i < response.Results.Count; i++)
+        {
+            Debug.Log("RESULTS COUNT IS " + response.Results.Count);
+            var room = Instantiate(_roomPrefab, _scrollViewContent.transform);
+            var roomComponent = room.GetComponent<LobbyInstance>();
+            roomComponent._lobbyIndex = i;
+            roomComponent.LobbyName = response.Results[i].Name;
+            roomComponent.PlayerCount = response.Results[i].MaxPlayers;
+            roomComponent.PlayersLogged = response.Results[i].Players.Count;
+            roomComponent.LobbyManager = this;
+            _instantiatedRooms.Add(roomComponent);
+        }
+    }
 }
