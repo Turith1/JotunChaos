@@ -18,6 +18,8 @@ public class LobbyManager : MonoBehaviour
     private bool heartbeatRunning;
 
     [SerializeField]
+    private int maxPlayers = 4;
+    [SerializeField]
     private GameObject jotunCharacterPrefab;
     [SerializeField]
     private GameObject priestCharacterPrefab;
@@ -51,7 +53,7 @@ public class LobbyManager : MonoBehaviour
             code = currentLobby.LobbyCode;
 
             // 1. Create Relay
-            string relayCode = await RelayManager.Instance.CreateRelay(4);
+            string relayCode = await RelayManager.Instance.CreateRelay(maxPlayers);
 
             NetworkManager.Singleton.StartHost();
 

@@ -11,7 +11,7 @@ public class LobbyController : MonoBehaviour
 
     private void Start()
     {
-        lobbyManager = FindFirstObjectByType<LobbyManager>();
+        lobbyManager = FindAnyObjectByType<LobbyManager>();
     }
 
     public async void CreateLobby()
