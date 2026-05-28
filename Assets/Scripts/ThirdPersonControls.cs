@@ -177,6 +177,8 @@ namespace StarterAssets
 
         private void Update()
         {
+            if (IsOwner)
+                OpenUI();
             if (!IsServer)
                 return;
 
@@ -474,9 +476,10 @@ namespace StarterAssets
             }
         }
 
-        /*public override void OnNetworkSpawn()
+        private void OpenUI()
         {
-            Debug.Log("IsOwner: "+ IsOwner + ", OwnerId: " + OwnerClientId + ", LocalId:" + NetworkManager.Singleton.LocalClientId);
-        }*/
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
     }
 }

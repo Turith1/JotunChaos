@@ -6,6 +6,8 @@ using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using Unity.Netcode;
 using System.Linq;
+using Unity.Services.Authentication;
+using System;
 
 public class LobbyManager : MonoBehaviour
 {
@@ -16,6 +18,8 @@ public class LobbyManager : MonoBehaviour
     public bool IsHost;
     public string code;
     private bool heartbeatRunning;
+    private bool _isLeavingLobby;
+    private bool isBusy = false;
 
     [SerializeField]
     private int maxPlayers = 4;
@@ -40,8 +44,20 @@ public class LobbyManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+
+    private void Start()
+    {
+        NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnected;
+    }
+
     public async Task CreateLobby()
     {
+
+        if (isBusy)
+            return;
+
+        isBusy = true;
+
         try
         {
             currentLobby = await LobbyService.Instance.CreateLobbyAsync(
@@ -86,10 +102,16 @@ public class LobbyManager : MonoBehaviour
         {
             Debug.LogError(e);
         }
+
+        isBusy = false;
     }
 
     public async Task JoinLobby(string code)
     {
+        if (isBusy)
+            return;
+        isBusy = true;
+
         try
         {
             currentLobby = await LobbyService.Instance.JoinLobbyByCodeAsync(code);
@@ -114,6 +136,59 @@ public class LobbyManager : MonoBehaviour
         {
             Debug.LogError(e);
         }
+
+        isBusy = false;
+    }
+
+    public async Task LeaveLobbyAsync()
+    {
+        Debug.Log("am i busy: " + isBusy + " am i leaving: " + _isLeavingLobby + " am i host: " + NetworkManager.Singleton.IsHost + " current lobby: " + currentLobby);
+        if (isBusy)
+            return;
+
+        if (_isLeavingLobby)
+            return;
+
+        isBusy = true;
+        _isLeavingLobby = true;
+
+        try
+        {
+            Debug.Log("Leaving Lobby...");
+
+            // HOST deletes lobby
+            if (NetworkManager.Singleton.IsHost)
+            {
+                if (currentLobby != null)
+                {
+                    await LobbyService.Instance.DeleteLobbyAsync(currentLobby.Id);
+                }
+            }
+            // CLIENT leaves lobby
+            else
+            {
+                if (currentLobby != null)
+                {
+                    await LobbyService.Instance.RemovePlayerAsync(currentLobby.Id, AuthenticationService.Instance.PlayerId);
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogWarning($"Lobby leave failed: {e.Message}");
+        }
+
+        ShutdownNetwork();
+
+        currentLobby = null;
+
+        // Wait one frame for NGO cleanup
+        await Task.Yield();
+
+        SceneManager.LoadScene("MainMenu");
+
+        isBusy = false;
+        _isLeavingLobby = false;
     }
 
     async void HeartBeat()
@@ -160,6 +235,10 @@ public class LobbyManager : MonoBehaviour
 
     public void TryStartGame()
     {
+        if (isBusy)
+            return;
+        isBusy = true;
+
         Debug.Log("HOST TRYING TO START GAME");
 
         if (!NetworkManager.Singleton.IsHost)
@@ -174,12 +253,14 @@ public class LobbyManager : MonoBehaviour
         List<ulong> clients = NetworkManager.Singleton.ConnectedClientsIds.ToList();
 
         ulong jotunClientId =
-            clients[Random.Range(0, clients.Count)];
+            clients[UnityEngine.Random.Range(0, clients.Count)];
 
         foreach (ulong clientId in clients)
         {
             SpawnGameplayCharacter(clientId, jotunClientId);
         }
+
+        isBusy = false;
     }
 
     public void SpawnGameplayCharacter(ulong clientId, ulong jotunClientId)
@@ -210,5 +291,70 @@ public class LobbyManager : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+    }
+
+    private void ShutdownNetwork()
+    {
+        if (isBusy)
+            return;
+
+        isBusy = true;
+
+        if (NetworkManager.Singleton != null &&
+            NetworkManager.Singleton.IsListening)
+        {
+            NetworkManager.Singleton.Shutdown();
+        }
+
+        isBusy = false;
+    }
+
+    private async void OnClientDisconnected(ulong clientId)
+    {
+        if (isBusy)
+            return;
+
+        isBusy = true;
+
+        // Ignore disconnects from other players
+        if (clientId != NetworkManager.Singleton.LocalClientId)
+            return;
+
+        // Ignore intentional leave
+        if (_isLeavingLobby)
+            return;
+
+        Debug.Log("Unexpected disconnect detected.");
+
+        await HandleConnectionLostAsync();
+    }
+
+
+    private async Task HandleConnectionLostAsync()
+    {
+        try
+        {
+            ShutdownNetwork();
+
+            currentLobby = null;
+
+            await Task.Yield();
+
+            SceneManager.LoadScene("MainMenu");
+        }
+        catch (Exception e)
+        {
+            Debug.LogException(e);
+        }
+
+        isBusy = false;
+    }
+
+    private void OnDestroy()
+    {
+        if (NetworkManager.Singleton != null)
+        {
+            NetworkManager.Singleton.OnClientDisconnectCallback -= OnClientDisconnected;
+        }
     }
 }

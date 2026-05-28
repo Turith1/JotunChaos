@@ -114,6 +114,11 @@ public class LobbyUI : MonoBehaviour
             "Lobby code: " + LobbyManager.Instance.code;
     }
 
+    public async void LeaveLobby()
+    {
+        await LobbyManager.Instance.LeaveLobbyAsync();
+    }
+
     private void OnDestroy()
     {
         if (NetworkManager.Singleton == null)
