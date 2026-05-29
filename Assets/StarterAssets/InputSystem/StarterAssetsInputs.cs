@@ -13,6 +13,7 @@ namespace StarterAssets
 		public bool jump;
 		public bool sprint;
 		public bool attack;
+		public bool esc;
 
 		[Header("Movement Settings")]
 		public bool analogMovement;
@@ -49,6 +50,11 @@ namespace StarterAssets
         {
 			CastInput(value.isPressed);
         }
+
+		public void OnEsc(InputValue value)
+        {
+			EscInput(value.isPressed);
+        }
 #endif
 
 
@@ -75,6 +81,11 @@ namespace StarterAssets
 		public void CastInput(bool newCastInput)
         {
 			attack = newCastInput;
+        }
+
+		public void EscInput(bool newEscInput)
+        {
+			esc = newEscInput;
         }
 
 		private void OnApplicationFocus(bool hasFocus)

@@ -244,7 +244,7 @@
                     "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": ";KeyboardMouse",
                     "action": "Cast",
                     "isComposite": false,
                     "isPartOfComposite": false

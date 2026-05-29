@@ -3,12 +3,18 @@ using TMPro;
 using Unity.Netcode;
 using UnityEngine.UI;
 using System.Collections;
+using StarterAssets;
 
 public class LobbyUI : MonoBehaviour
 {
     public static LobbyUI Instance;
 
     public Button mainButton;
+    public GameObject escUI;
+    public GameObject cam;
+    private bool isUIOpen = false;
+    public StarterAssetsInputs input;
+    public ClientPlayerMove movement;
     [SerializeField] private TMP_Text mainButtonText;
     [SerializeField] private TMP_Text buttonText;
     [SerializeField] private TMP_Text lobbyCode;
@@ -112,6 +118,23 @@ public class LobbyUI : MonoBehaviour
 
         lobbyCode.text =
             "Lobby code: " + LobbyManager.Instance.code;
+    }
+
+    public void EscPressed()
+    {
+        isUIOpen = !isUIOpen;
+
+        escUI.SetActive(isUIOpen);
+
+        Cursor.visible = isUIOpen;
+
+        Cursor.lockState = isUIOpen
+            ? CursorLockMode.Confined
+            : CursorLockMode.Locked;
+
+        movement.enabled = !isUIOpen;
+
+        input.esc = false;
     }
 
     public async void LeaveLobby()

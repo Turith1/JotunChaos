@@ -1484,10 +1484,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1152046454}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 1049312345}
+        m_TargetAssemblyTypeName: LobbyUI, Assembly-CSharp
+        m_MethodName: EscPressed
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1949,6 +1949,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LobbyUI
   mainButton: {fileID: 1192973342}
+  escUI: {fileID: 1152046454}
+  cam: {fileID: 4292657356807577494}
+  input: {fileID: 0}
+  movement: {fileID: 0}
   mainButtonText: {fileID: 1410005245}
   buttonText: {fileID: 1410005245}
   lobbyCode: {fileID: 19201969}
@@ -2090,11 +2094,11 @@ GameObject:
   - component: {fileID: 1152046455}
   m_Layer: 5
   m_Name: InGameUI
-  m_TagString: Untagged
+  m_TagString: EscUI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1152046455
 RectTransform:
   m_ObjectHideFlags: 0

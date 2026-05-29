@@ -91,6 +91,8 @@ namespace StarterAssets
         private float _rotationVelocity;
         private float _verticalVelocity;
         private float _terminalVelocity = 53.0f;
+        private bool _isUIOpen = false;
+        [SerializeField] private ClientPlayerMove _movement;
 
         // timeout deltatime
         private float _jumpTimeoutDelta;
@@ -126,6 +128,7 @@ namespace StarterAssets
         private CharacterController _controller;
         private StarterAssetsInputs _input;
         [SerializeField] private GameObject _mainCamera;
+        [SerializeField] private GameObject _escUI;
 
         private const float _threshold = 0.01f;
 
@@ -144,13 +147,42 @@ namespace StarterAssets
         }
 
 
-        private void Awake()
+        public override void OnNetworkSpawn()
         {
-            // get a reference to our main camera
-            if (_mainCamera == null)
+            if (!IsOwner)
+                return;
+
+            StartCoroutine(InitializeReferences());
+        }
+
+        private IEnumerator InitializeReferences()
+        {
+            while (LobbyUI.Instance == null)
             {
-                _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
+                yield return null;
             }
+
+            while (_mainCamera == null || LobbyUI.Instance.input == null || LobbyUI.Instance.movement == null)
+            {
+                if (_mainCamera == null)
+                {
+                    _mainCamera = LobbyUI.Instance.cam;
+                }
+
+                if (LobbyUI.Instance.input == null)
+                {
+                    LobbyUI.Instance.input = _input;
+                }
+
+                if (LobbyUI.Instance.movement == null)
+                {
+                    LobbyUI.Instance.movement = _movement;
+                }
+
+                yield return null;
+            }
+
+            Debug.Log("Player references ready.");
         }
 
         private void Start()
@@ -177,8 +209,8 @@ namespace StarterAssets
 
         private void Update()
         {
-            if (IsOwner)
-                OpenUI();
+            if (IsOwner && _input != null && _input.esc)
+                LobbyUI.Instance.EscPressed();
             if (!IsServer)
                 return;
 
@@ -478,8 +510,21 @@ namespace StarterAssets
 
         private void OpenUI()
         {
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
+            if(_input != null && _input.esc)
+            {
+                _isUIOpen = !_isUIOpen;
+
+                _escUI.SetActive(_isUIOpen);
+
+                Cursor.visible = _isUIOpen;
+
+                Cursor.lockState = _isUIOpen
+                    ? CursorLockMode.None
+                    : CursorLockMode.Locked;
+
+                _movement.enabled = !_isUIOpen;
+            }
+            _input.esc = false;
         }
     }
 }
