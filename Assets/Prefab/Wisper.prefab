@@ -7702,7 +7702,7 @@ MonoBehaviour:
     FieldOfView: 40
     OrthographicSize: 10
     NearClipPlane: 0.2
-    FarClipPlane: 500
+    FarClipPlane: 6000
     Dutch: 0
     ModeOverride: 0
     PhysicalProperties:
