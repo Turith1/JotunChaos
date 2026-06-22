@@ -18,6 +18,7 @@ public class ClientPlayerMove : NetworkBehaviour
     private bool _lastSprint;
     private float _lastCamRot;
     private bool _lastAttack;
+    private bool _lastR;
 
     private void Awake()
     {
@@ -47,9 +48,9 @@ public class ClientPlayerMove : NetworkBehaviour
     }
 
     [ServerRpc]
-    public void UpdateInputServerRpc(Vector2 move, Vector2 look, bool jump, bool sprint, float camRotation, bool attack)
+    public void UpdateInputServerRpc(Vector2 move, Vector2 look, bool jump, bool sprint, float camRotation, bool attack, bool rAbility)
     {
-        m_ThirdPersonController.SetServerInput(move, look, jump, sprint, camRotation, attack);
+        m_ThirdPersonController.SetServerInput(move, look, jump, sprint, camRotation, attack, rAbility);
     }
 
     private void Update()
@@ -71,6 +72,7 @@ public class ClientPlayerMove : NetworkBehaviour
         bool sprint = m_StarterAssetsInputs.sprint;
         float camRot = _mainCamera.transform.eulerAngles.y;
         bool attack = m_StarterAssetsInputs.attack;
+        bool rAbility = m_StarterAssetsInputs.r;
 
         bool changed =
             move != _lastMove ||
@@ -78,6 +80,7 @@ public class ClientPlayerMove : NetworkBehaviour
             jump ||
             sprint ||
             attack ||
+            rAbility ||
             Mathf.Abs(camRot - _lastCamRot) > 0.1f;
 
         if (!changed)
@@ -89,6 +92,7 @@ public class ClientPlayerMove : NetworkBehaviour
         _lastSprint = sprint;
         _lastCamRot = camRot;
         _lastAttack = attack;
+        _lastR = rAbility;
 
         UpdateInputServerRpc(
             move,
@@ -96,7 +100,8 @@ public class ClientPlayerMove : NetworkBehaviour
             jump,
             sprint,
             camRot,
-            attack
+            attack,
+            rAbility
         );
 
         if (attack)

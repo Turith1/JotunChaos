@@ -7,14 +7,18 @@ public class AttackScript : MonoBehaviour
     private float raioDaEsfera = .3f;
     [SerializeField]
     private string oponentTag;
+    [SerializeField] private float castTime;
     private bool canAttack = true;
+
 
     private void Start()
     {
         NetworkHelper.instance.players.Add(GetComponent<NetworkObject>());
     }
+
     public void PerformAttack()
     {
+        UnityEngine.Debug.Log(System.Environment.StackTrace);
         var origin = transform.position;
         var direction = transform.forward;
         Collider[] colisoresEncontrados = Physics.OverlapSphere(origin + direction + transform.up, raioDaEsfera);
@@ -27,7 +31,7 @@ public class AttackScript : MonoBehaviour
             if (colisor.tag == oponentTag && colisor.gameObject != this.gameObject)
             {
                 NetworkObject targeNetWorkObject = colisor.GetComponent<NetworkObject>();
-                if(targeNetWorkObject != null && canAttack)
+                if (targeNetWorkObject != null && canAttack)
                 {
                     Debug.Log("Objeto detectado com a tag: " + colisor.gameObject.name);
                     NetworkHelper.instance.RequestAttackServerRpc(NetworkManager.Singleton.LocalClientId, targeNetWorkObject.OwnerClientId);
@@ -37,6 +41,11 @@ public class AttackScript : MonoBehaviour
                 // Faça a sua ação aqui (ex: causar dano, ativar animação)
             }
         }
+    }
+
+    private void RAbility()
+    {
+
     }
 
     private void RefreshAttack()

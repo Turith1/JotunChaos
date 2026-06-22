@@ -115,6 +115,7 @@ namespace StarterAssets
         private bool _serverAnalog = false;
         private float _serverCamRotation;
         private bool _serverAttack;
+        private bool _serverRAbility;
 
         //shooting params
         [SerializeField] GameObject _castPrefab;
@@ -211,6 +212,7 @@ namespace StarterAssets
         {
             if (IsOwner && _input != null && _input.esc)
                 LobbyUI.Instance.EscPressed();
+
             if (!IsServer)
                 return;
 
@@ -274,7 +276,7 @@ namespace StarterAssets
                 _cinemachineTargetYaw, 0.0f);
         }
 
-        public void SetServerInput(Vector2 move, Vector2 look, bool jump, bool sprint, float camRot, bool attack)
+        public void SetServerInput(Vector2 move, Vector2 look, bool jump, bool sprint, float camRot, bool attack, bool rAbility)
         {
             _serverMove = move;
             _serverLook = look;
@@ -282,6 +284,7 @@ namespace StarterAssets
             _serverSprint = sprint;
             _serverCamRotation = camRot;
             _serverAttack = attack;
+            _serverRAbility = rAbility;
         }
 
         private void Move()
@@ -445,14 +448,14 @@ namespace StarterAssets
             }
         }
 
-        private IEnumerator EndAttack()
+        /*private IEnumerator EndAttack()
         {
             _animator.SetBool(_attackAnimation, true);
             yield return new WaitForEndOfFrame();
             _animator.SetBool(_attackAnimation, false);
             _serverAttack = false;
             ResetAttackCLientRpc();
-        }
+        }*/
 
         [ClientRpc]
         private void ResetAttackCLientRpc()
@@ -508,7 +511,7 @@ namespace StarterAssets
             }
         }
 
-        private void OpenUI()
+        /*private void OpenUI()
         {
             if(_input != null && _input.esc)
             {
@@ -525,6 +528,6 @@ namespace StarterAssets
                 _movement.enabled = !_isUIOpen;
             }
             _input.esc = false;
-        }
+        }*/
     }
 }
