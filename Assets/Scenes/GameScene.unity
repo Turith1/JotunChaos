@@ -4099,6 +4099,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Mont de neve
       objectReference: {fileID: 0}
+    - target: {fileID: 2846922900595763904, guid: 5b576b4e197c0d54ea2eef29511fbcb5, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3227284227651219578, guid: 5b576b4e197c0d54ea2eef29511fbcb5, type: 3}
       propertyPath: m_LocalPosition.x
       value: 812.72095
