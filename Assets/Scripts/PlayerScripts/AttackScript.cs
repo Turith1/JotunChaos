@@ -1,7 +1,7 @@
 using Unity.Netcode;
 using UnityEngine;
 
-public class AttackScript : MonoBehaviour
+public class AttackScript : NetworkBehaviour
 {
     [SerializeField]
     private float raioDaEsfera = .3f;
@@ -11,9 +11,12 @@ public class AttackScript : MonoBehaviour
     private bool canAttack = true;
 
 
-    private void Start()
+    public override void OnNetworkSpawn()
     {
-        NetworkHelper.instance.players.Add(GetComponent<NetworkObject>());
+        if (IsServer)
+        {
+            NetworkHelper.instance.players.Add(NetworkObject);
+        }
     }
 
     public void PerformAttack()
@@ -60,8 +63,11 @@ public class AttackScript : MonoBehaviour
         Gizmos.DrawWireSphere(origin + direction + transform.up, raioDaEsfera);
     }
 
-    private void OnDisable()
+    public override void OnNetworkDespawn()
     {
-        NetworkHelper.instance.players.Remove(GetComponent<NetworkObject>());
+        if (IsServer)
+        {
+            NetworkHelper.instance.players.Remove(NetworkObject);
+        }
     }
 }

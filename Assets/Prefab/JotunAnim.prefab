@@ -1028,7 +1028,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 1869465264
+  GlobalObjectIdHash: 1407455033
   InScenePlacedSourceGlobalObjectIdHash: 1407455033
   DeferredDespawnTick: 0
   Ownership: 1
@@ -1302,6 +1302,13 @@ MonoBehaviour:
     TransitionDuration: 0.25
     TriggerNameHash: 1080829965
     TransitionIndex: 2
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: -1071854972
+    DestinationState: 356459276
+    TransitionDuration: 0.25
+    TriggerNameHash: 356459276
+    TransitionIndex: 3
   AnimatorParameterEntries:
     ParameterEntries:
     - name: Speed
@@ -1326,6 +1333,10 @@ MonoBehaviour:
       ParameterType: 1
     - name: Attack
       NameHash: 1080829965
+      Synchronize: 1
+      ParameterType: 9
+    - name: RAbility
+      NameHash: 356459276
       Synchronize: 1
       ParameterType: 9
   AnimatorParametersExpanded: 0
@@ -1438,6 +1449,17 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   playerMesh: {fileID: 8134213361449003131}
   totalHealth: 100
+  startsAsJotun: 1
+  isJotun:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
+  isDead:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
   health:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0

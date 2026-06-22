@@ -281,6 +281,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   playerTag: Priest
+  wisper: {fileID: 5073345244318587096, guid: 3d173051bb7744c408d232a565d75327, type: 3}
   players: []
 --- !u!4 &283040271
 Transform:
