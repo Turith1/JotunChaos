@@ -7,8 +7,10 @@ public class PlayerHealth : NetworkBehaviour
 
     [SerializeField]
     private GameObject playerMesh;
+    [SerializeField]
+    private float totalHealth;
 
-    public NetworkVariable<int> health = new NetworkVariable<int>(
+    public NetworkVariable<float> health = new NetworkVariable<float>(
         100,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server
@@ -42,6 +44,21 @@ public class PlayerHealth : NetworkBehaviour
         }
     }
 
+    public void HealthMe(float healAmount)
+    {
+        Debug.Log("HealMe called");
+        if (!IsServer)
+            return;
+
+        if (health.Value <= 0)
+            return;
+
+        float healValue = totalHealth * healAmount;
+
+        Debug.Log("heal called");
+        health.Value = Mathf.Min(health.Value + healValue, totalHealth);
+    }
+
     private void Die()
     {
         Debug.Log($"{OwnerClientId} died");
@@ -63,7 +80,7 @@ public class PlayerHealth : NetworkBehaviour
         }
     }
 
-    private void OnHealthChanged(int previous, int current)
+    private void OnHealthChanged(float previous, float current)
     {
         Debug.Log("New Health: " + current);
 
