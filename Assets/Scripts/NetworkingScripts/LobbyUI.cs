@@ -116,8 +116,10 @@ public class LobbyUI : MonoBehaviour
 
         UpdateMainButton();
 
-        lobbyCode.text =
-            "Lobby code: " + LobbyManager.Instance.code;
+        if (NetworkManager.Singleton.IsHost)
+            lobbyCode.text = "Lobby code: " + LobbyManager.Instance.code;
+        else
+            lobbyCode.text = "";
     }
 
     public void EscPressed()
