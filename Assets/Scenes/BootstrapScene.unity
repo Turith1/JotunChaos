@@ -275,6 +275,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 532233d7b4f433147af987089d16fc01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkHelper
+  detectionDistance: 50
+  detectionSize: {x: 2, y: 2}
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  playerTag: Priest
   players: []
 --- !u!4 &283040271
 Transform:
@@ -553,6 +559,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LobbyManager
   IsHost: 0
   code: 
+  maxPlayers: 4
   jotunCharacterPrefab: {fileID: 1539057693155192252, guid: 7ce3cb707a9cba649a98c0babd8f85a6, type: 3}
   priestCharacterPrefab: {fileID: 4585484831502450405, guid: abddb3d9c9361a048bf4b4ab169c36bf, type: 3}
   wisper: {fileID: 5073345244318587096, guid: 3d173051bb7744c408d232a565d75327, type: 3}

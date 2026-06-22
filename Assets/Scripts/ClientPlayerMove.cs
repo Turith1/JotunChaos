@@ -106,5 +106,7 @@ public class ClientPlayerMove : NetworkBehaviour
 
         if (attack)
             m_StarterAssetsInputs.attack = false;
+        if (rAbility)
+            m_StarterAssetsInputs.r = false;
     }
 }

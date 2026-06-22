@@ -222,6 +222,7 @@ namespace StarterAssets
             GroundedCheck();
             Move();
             Attack();
+            RAbility();
         }
 
         private void LateUpdate()
@@ -446,6 +447,25 @@ namespace StarterAssets
                 _animator.SetTrigger("Attack");
                 //StartCoroutine(EndAttack());
             }
+        }
+
+        private void RAbility()
+        {
+            if (_serverRAbility)
+            {
+                Debug.Log("RAbility called");
+                _animator.SetTrigger("RAbility");
+                _movement.enabled = false;
+                Invoke("ResetR", .6f);
+            }
+        }
+
+        private void ResetR()
+        {
+            Debug.Log("reset");
+            _movement.enabled = true;
+            _serverRAbility = false;
+            NetworkHelper.instance.RAbilityCheck(0);
         }
 
         /*private IEnumerator EndAttack()

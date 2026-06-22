@@ -18,7 +18,6 @@ public class AttackScript : MonoBehaviour
 
     public void PerformAttack()
     {
-        UnityEngine.Debug.Log(System.Environment.StackTrace);
         var origin = transform.position;
         var direction = transform.forward;
         Collider[] colisoresEncontrados = Physics.OverlapSphere(origin + direction + transform.up, raioDaEsfera);
