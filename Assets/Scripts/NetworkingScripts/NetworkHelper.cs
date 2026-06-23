@@ -139,6 +139,8 @@ public class NetworkHelper : MonoBehaviour
 
             obj.GetComponent<NetworkObject>()
                 .SpawnAsPlayerObject(clientId, true);
+
+            LobbyManager.Instance.ShowHideStartBTNClientRpc(true);
         }
     }
 

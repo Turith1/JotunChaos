@@ -9,11 +9,12 @@ using System.Linq;
 using Unity.Services.Authentication;
 using System;
 
-public class LobbyManager : MonoBehaviour
+public class LobbyManager : NetworkBehaviour
 {
     public static LobbyManager Instance;
 
     public Lobby currentLobby;
+    public GameObject startBTN;
 
     public bool IsHost;
     public string code;
@@ -284,6 +285,12 @@ public class LobbyManager : MonoBehaviour
         }
     }
 
+    [ClientRpc]
+    public void ShowHideStartBTNClientRpc(bool onOff)
+    {
+        startBTN.SetActive(onOff);
+    }
+
     public void SpawnGameplayCharacter(ulong clientId, ulong jotunClientId)
     {
         NetworkObject oldPlayer =
@@ -303,6 +310,8 @@ public class LobbyManager : MonoBehaviour
 
         obj.GetComponent<NetworkObject>()
             .SpawnAsPlayerObject(clientId, true);
+
+        ShowHideStartBTNClientRpc(false);
 
         HideCursorClientRpc();
     }

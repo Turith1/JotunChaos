@@ -1,6 +1,7 @@
 using UnityEngine;
 using Unity.Netcode;
 using StarterAssets;
+using System.Collections;
 
 public class PlayerHealth : NetworkBehaviour
 {
@@ -28,17 +29,11 @@ public class PlayerHealth : NetworkBehaviour
         }
     }
 
+
+
     private void Start()
     {
         health.OnValueChanged += OnHealthChanged;
-        Invoke("HideBTN", .5f);
-    }
-
-    private void HideBTN()
-    {
-        GameObject btn = GameObject.Find("LobbyUIElements");
-        if (btn != null)
-            btn.SetActive(false);
     }
 
     public void TakeDamage(int damage)

@@ -2448,6 +2448,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LobbyUI
   mainButton: {fileID: 1192973342}
+  startBTN: {fileID: 99071657}
   escUI: {fileID: 1152046454}
   cam: {fileID: 4292657356807577494}
   input: {fileID: 0}

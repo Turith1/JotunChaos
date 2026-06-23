@@ -15,6 +15,8 @@ public class LobbyUI : MonoBehaviour
     private bool isUIOpen = false;
     public StarterAssetsInputs input;
     public ClientPlayerMove movement;
+    public GameObject startBTN;
+
     [SerializeField] private TMP_Text mainButtonText;
     [SerializeField] private TMP_Text buttonText;
     [SerializeField] private TMP_Text lobbyCode;
@@ -23,6 +25,7 @@ public class LobbyUI : MonoBehaviour
     private void OnEnable()
     {
         StartCoroutine(InitLobbyUI());
+        LobbyManager.Instance.startBTN = startBTN;
     }
 
     private void Awake()
